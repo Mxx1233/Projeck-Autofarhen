@@ -1,0 +1,74 @@
+cmake_minimum_required(VERSION 3.8)
+project(control_pkg)
+
+if(CMAKE_COMPILER_IS_GNUCXX OR CMAKE_CXX_COMPILER_ID MATCHES "Clang")
+  add_compile_options(-Wall -Wextra -Wpedantic)
+endif()
+
+find_package(ament_cmake REQUIRED)
+find_package(rclcpp REQUIRED)
+find_package(std_msgs REQUIRED)
+find_package(nav_msgs REQUIRED)
+find_package(sensor_msgs REQUIRED)
+find_package(rusty_racer_interfaces REQUIRED)
+
+include_directories(include)
+
+# 共享库
+add_library(${PROJECT_NAME}_lib SHARED
+  src/velocity_controller.cpp
+  src/command_converter.cpp
+)
+
+ament_target_dependencies(${PROJECT_NAME}_lib
+  rclcpp std_msgs
+)
+
+# 第一个可执行文件：controller_node
+add_executable(controller_node_exe 
+  src/controller_node.cpp
+)
+
+target_link_libraries(controller_node_exe ${PROJECT_NAME}_lib)
+
+ament_target_dependencies(controller_node_exe
+  rclcpp std_msgs nav_msgs rusty_racer_interfaces
+)
+
+# 第二个可执行文件：uc_bridge_adapter_node
+add_executable(uc_bridge_adapter_node_exe
+  src/uc_bridge_adapter_node.cpp
+)
+
+target_link_libraries(uc_bridge_adapter_node_exe ${PROJECT_NAME}_lib)
+
+ament_target_dependencies(uc_bridge_adapter_node_exe
+  rclcpp std_msgs rusty_racer_interfaces
+)
+
+# 安装
+install(TARGETS ${PROJECT_NAME}_lib
+  ARCHIVE DESTINATION lib
+  LIBRARY DESTINATION lib
+  RUNTIME DESTINATION bin
+)
+
+install(TARGETS 
+  controller_node_exe
+  uc_bridge_adapter_node_exe
+  DESTINATION lib/${PROJECT_NAME}
+)
+
+install(DIRECTORY include/
+  DESTINATION include
+)
+
+install(DIRECTORY config/
+  DESTINATION share/${PROJECT_NAME}/config
+)
+
+ament_export_include_directories(include)
+ament_export_libraries(${PROJECT_NAME}_lib)
+ament_export_dependencies(rclcpp std_msgs nav_msgs sensor_msgs rusty_racer_interfaces)
+
+ament_package()

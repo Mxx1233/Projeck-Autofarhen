@@ -5,39 +5,40 @@ if(CMAKE_COMPILER_IS_GNUCXX OR CMAKE_CXX_COMPILER_ID MATCHES "Clang")
   add_compile_options(-Wall -Wextra -Wpedantic)
 endif()
 
-# 查找依赖
+# 依赖
 find_package(ament_cmake REQUIRED)
 find_package(rclcpp REQUIRED)
-find_package(rusty_racer_interfaces REQUIRED)
+find_package(std_msgs REQUIRED)
 find_package(nav_msgs REQUIRED)
+find_package(rusty_racer_interfaces REQUIRED)
 
 # 包含目录
-include_directories(
-  include
-)
+include_directories(include)
 
-# 添加可执行文件
+# 可执行文件：controller_node
 add_executable(controller_node_exe 
   src/controller_node.cpp
 )
 
-# 链接依赖
 ament_target_dependencies(controller_node_exe
-  rclcpp
-  rusty_racer_interfaces
-  nav_msgs
+  rclcpp std_msgs nav_msgs rusty_racer_interfaces
 )
 
-# 安装可执行文件
-install(TARGETS
+# 安装
+install(TARGETS 
   controller_node_exe
   DESTINATION lib/${PROJECT_NAME}
 )
 
-# 安装头文件
-install(DIRECTORY
-  include/
+install(DIRECTORY include/
   DESTINATION include
 )
+
+install(DIRECTORY config/
+  DESTINATION share/${PROJECT_NAME}/config
+)
+
+ament_export_include_directories(include)
+ament_export_dependencies(rclcpp std_msgs nav_msgs rusty_racer_interfaces)
 
 ament_package()
