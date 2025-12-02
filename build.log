@@ -1,0 +1,13 @@
+Starting >>> control_pkg
+[0.367s] WARNING:colcon.colcon_ros.prefix_path.ament:The path '/root/autonomous_car_ws/install/control_pkg' in the environment variable AMENT_PREFIX_PATH doesn't exist
+[0.367s] WARNING:colcon.colcon_ros.prefix_path.ament:The path '/root/autonomous_car_ws/install/rusty_racer_interfaces' in the environment variable AMENT_PREFIX_PATH doesn't exist
+[0.368s] WARNING:colcon.colcon_ros.prefix_path.catkin:The path '/root/autonomous_car_ws/install/control_pkg' in the environment variable CMAKE_PREFIX_PATH doesn't exist
+[0.368s] WARNING:colcon.colcon_ros.prefix_path.catkin:The path '/root/autonomous_car_ws/install/rusty_racer_interfaces' in the environment variable CMAKE_PREFIX_PATH doesn't exist
+[0.373s] ERROR:colcon.colcon_cmake.task.cmake.build:Failed to find the following files:
+- /root/autonomous_car_ws/install/rusty_racer_interfaces/share/rusty_racer_interfaces/package.sh
+Check that the following packages have been built:
+- rusty_racer_interfaces
+Failed   <<< control_pkg [0.03s, exited with code 1]
+
+Summary: 0 packages finished [0.31s]
+  1 package failed: control_pkg
